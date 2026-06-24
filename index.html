@@ -35,9 +35,8 @@
     color:var(--text);
     background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bottom) 70%);
     min-height:100dvh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:grid;
+    place-items:center;
     overflow:hidden;
     position:relative;
     padding:24px 16px;
@@ -77,6 +76,7 @@
   /* ---- card ---- */
   .card{
     position:relative;
+    grid-area:1 / 1;
     z-index:2;
     width:min(92vw,440px);
     background:rgba(255,255,255,.72);
@@ -91,8 +91,24 @@
     flex-direction:column;
     align-items:center;
     gap:22px;
+    opacity:1;
+    transform:translate3d(0,0,0) scale(1);
+    transition:opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1);
+    will-change:opacity,transform;
+    -webkit-transform:translate3d(0,0,0) scale(1);
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
   }
   .card.hidden{display:none}
+  .card.is-leaving{
+    opacity:0;
+    transform:translate3d(0,-10px,0) scale(.985);
+    pointer-events:none;
+  }
+  .card.is-entering{
+    opacity:0;
+    transform:translate3d(0,12px,0) scale(.985);
+  }
 
   /* intro / suspense screen */
   .hidden{display:none}
@@ -104,14 +120,44 @@
     margin:0;
     min-height:1.4em;
     color:var(--text);
-    transition:opacity .35s ease;
+    opacity:1;
+    transform:translate3d(0,0,0);
+    transition:opacity .42s ease, transform .42s ease;
+    will-change:opacity,transform;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
   }
+  .intro-line.is-changing{opacity:0;transform:translate3d(0,7px,0)}
   .loader-dots{display:flex;gap:9px}
   .loader-dots span{width:12px;height:12px;border-radius:50%;background:var(--blue);animation:dotpulse 1s ease-in-out infinite}
+  .loader-dots{
+    opacity:1;
+    transform:translate3d(0,0,0);
+    transition:opacity .34s ease, transform .34s ease;
+    will-change:opacity,transform;
+  }
+  .loader-dots.is-hiding{opacity:0;transform:translate3d(0,-6px,0);pointer-events:none}
   .loader-dots span:nth-child(2){animation-delay:.16s}
   .loader-dots span:nth-child(3){animation-delay:.32s}
   @keyframes dotpulse{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(-9px);opacity:1}}
   .btn-begin{background:var(--yes);box-shadow:0 8px 0 var(--yes-dark);animation:beginpulse 1.5s ease-in-out infinite}
+  .btn-begin.hidden{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transform:translate3d(0,9px,0) scale(.96);
+    animation:none;
+  }
+  .btn-begin{
+    opacity:1;
+    visibility:visible;
+    transform:translate3d(0,0,0) scale(1);
+    transition:opacity .38s ease, transform .38s cubic-bezier(.2,1.15,.35,1), background .2s, box-shadow .2s;
+    will-change:opacity,transform;
+  }
   .btn-begin:active{transform:translateY(4px);box-shadow:0 4px 0 var(--yes-dark)}
   @keyframes beginpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 
@@ -384,7 +430,7 @@
     "Are you suuure? I already started planning 🥺",
     "What if I told you I have booked the tickets?",
     "I have heard ATL is the place to be for July 4th when you are in it!",
-    "This time there will be Hanis pastry and other surprises!",
+    "This time there will be Hani's pastry and other surprises!",
     "I really want to help you pack!",
     "I am prepared to sleep on the couch..",
     "Pretty please, with a cherry on top?"
@@ -475,27 +521,66 @@
       beginBtn.classList.remove('hidden');
       return;
     }
+
+    function afterTransition(el, fallbackMs, done){
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        el.removeEventListener('transitionend', finish);
+        done();
+      };
+      el.addEventListener('transitionend', finish, { once:true });
+      setTimeout(finish, fallbackMs);
+    }
+
+    function swapIntroLine(nextText, done){
+      introLine.classList.add('is-changing');
+      afterTransition(introLine, 520, () => {
+        introLine.textContent = nextText;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            introLine.classList.remove('is-changing');
+            afterTransition(introLine, 520, done);
+          });
+        });
+      });
+    }
+
+    function showBeginButton(){
+      loaderDots.classList.add('is-hiding');
+      afterTransition(loaderDots, 420, () => {
+        loaderDots.classList.add('hidden');
+        requestAnimationFrame(() => beginBtn.classList.remove('hidden'));
+      });
+    }
+
     let i = 0;
     introLine.textContent = introLines[0];
-    const timer = setInterval(() => {
+    function queueNextLine(){
+      setTimeout(() => {
       i++;
       if (i < introLines.length){
-        introLine.style.opacity = '0';
-        setTimeout(() => {
-          introLine.textContent = introLines[i];
-          introLine.style.opacity = '1';
-        }, 320);
+        swapIntroLine(introLines[i], queueNextLine);
       } else {
-        clearInterval(timer);
-        loaderDots.classList.add('hidden');
-        beginBtn.classList.remove('hidden');
+        showBeginButton();
       }
-    }, 1500);
+      }, 1150);
+    }
+    queueNextLine();
   })();
 
   beginBtn.addEventListener('click', () => {
-    introScreen.classList.add('hidden');
+    introScreen.classList.add('is-leaving');
     ask.classList.remove('hidden');
+    ask.classList.add('is-entering');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => ask.classList.remove('is-entering'));
+    });
+    setTimeout(() => {
+      introScreen.classList.add('hidden');
+      introScreen.classList.remove('is-leaving');
+    }, 460);
   });
 
   function celebrate(){
