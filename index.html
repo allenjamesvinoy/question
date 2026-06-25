@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>A little question for you</title>
+<title>She said yes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
@@ -12,22 +12,17 @@
     --sky-top:#bfe3ff;
     --sky-bottom:#eaf6ff;
     --ground:#ffffff;
-    --ink:#27344a;        /* penguin body */
-    --cream:#fff8ef;      /* belly + face */
+    --ink:#27344a;
+    --cream:#fff8ef;
     --beak:#ff9d3d;
     --feet:#ff8a2b;
     --cheek:#ff9fb0;
-    --yes:#ff5a6e;        /* warm invite red */
-    --yes-dark:#e83d57;
-    --blue:#3f6fd6;       /* july 4th blue accent */
-    --no:#9bb0c6;         /* muted, on purpose */
-    --no-dark:#7e95ae;
-    --tear:#7fc8ff;
+    --yes:#ff5a6e;
+    --blue:#3f6fd6;
     --text:#2a3650;
   }
 
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-
   html,body{height:100%;margin:0}
 
   body{
@@ -42,7 +37,6 @@
     padding:24px 16px;
   }
 
-  /* snowy hill behind everything */
   .ground{
     position:fixed;
     left:-10%;
@@ -56,27 +50,16 @@
   }
 
   .sky-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-
-  .snow{
-    position:absolute;
-    top:-12px;
-    border-radius:50%;
-    background:#fff;
-    opacity:.9;
-    animation:fall linear infinite;
-  }
+  .snow{position:absolute;top:-12px;border-radius:50%;background:#fff;opacity:.9;animation:fall linear infinite}
   @keyframes fall{
     0%{transform:translateY(-10vh) translateX(0)}
     100%{transform:translateY(112vh) translateX(var(--drift,10px))}
   }
-
   .star{position:absolute;color:#fff;opacity:.7;font-size:12px;animation:twinkle 3s ease-in-out infinite}
   @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.85}}
 
-  /* ---- card ---- */
   .card{
     position:relative;
-    grid-area:1 / 1;
     z-index:2;
     width:min(92vw,440px);
     background:rgba(255,255,255,.72);
@@ -90,150 +73,38 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:22px;
-    opacity:1;
-    transform:translate3d(0,0,0) scale(1);
-    transition:opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1);
-    will-change:opacity,transform;
-    -webkit-transform:translate3d(0,0,0) scale(1);
+    gap:20px;
+    animation:card-in .55s cubic-bezier(.2,.85,.25,1) both;
+    transform:translate3d(0,0,0);
     backface-visibility:hidden;
     -webkit-backface-visibility:hidden;
   }
-  .card.hidden{display:none}
-  .card.is-leaving{
-    opacity:0;
-    transform:translate3d(0,-10px,0) scale(.985);
-    pointer-events:none;
+  @keyframes card-in{
+    from{opacity:0;transform:translate3d(0,14px,0) scale(.985)}
+    to{opacity:1;transform:translate3d(0,0,0) scale(1)}
   }
-  .card.is-entering{
-    opacity:0;
-    transform:translate3d(0,12px,0) scale(.985);
-  }
-
-  /* intro / suspense screen */
-  .hidden{display:none}
-  .intro-line{
-    font-family:'Fredoka',sans-serif;
-    font-weight:600;
-    font-size:clamp(1.3rem,5vw,1.85rem);
-    line-height:1.3;
-    margin:0;
-    min-height:1.4em;
-    color:var(--text);
-    opacity:1;
-    transform:translate3d(0,0,0);
-    transition:opacity .42s ease, transform .42s ease;
-    will-change:opacity,transform;
-    backface-visibility:hidden;
-    -webkit-backface-visibility:hidden;
-  }
-  .intro-line.is-changing{opacity:0;transform:translate3d(0,7px,0)}
-  .loader-dots{display:flex;gap:9px}
-  .loader-dots span{width:12px;height:12px;border-radius:50%;background:var(--blue);animation:dotpulse 1s ease-in-out infinite}
-  .loader-dots{
-    opacity:1;
-    transform:translate3d(0,0,0);
-    transition:opacity .34s ease, transform .34s ease;
-    will-change:opacity,transform;
-  }
-  .loader-dots.is-hiding{opacity:0;transform:translate3d(0,-6px,0);pointer-events:none}
-  .loader-dots span:nth-child(2){animation-delay:.16s}
-  .loader-dots span:nth-child(3){animation-delay:.32s}
-  @keyframes dotpulse{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(-9px);opacity:1}}
-  .btn-begin{background:var(--yes);box-shadow:0 8px 0 var(--yes-dark);animation:beginpulse 1.5s ease-in-out infinite}
-  .btn-begin.hidden{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    opacity:0;
-    visibility:hidden;
-    pointer-events:none;
-    transform:translate3d(0,9px,0) scale(.96);
-    animation:none;
-  }
-  .btn-begin{
-    opacity:1;
-    visibility:visible;
-    transform:translate3d(0,0,0) scale(1);
-    transition:opacity .38s ease, transform .38s cubic-bezier(.2,1.15,.35,1), background .2s, box-shadow .2s;
-    will-change:opacity,transform;
-  }
-  .btn-begin:active{transform:translateY(4px);box-shadow:0 4px 0 var(--yes-dark)}
-  @keyframes beginpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 
   .penguin-wrap{width:170px;height:200px;margin-top:-6px}
-  .penguin{width:100%;height:100%;display:block;transform-origin:50% 92%;animation:bob 2.6s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-1.5deg)}}
-
-  /* mood toggles */
-  .penguin .happy-eyes,
-  .penguin .tear,
-  .penguin .brow{opacity:0}
-  .penguin .smile-small{opacity:1}
-  .penguin .smile-frown{opacity:0}
-
-  .penguin.is-sad .brow{opacity:1}
-  .penguin.is-sad .tear{opacity:1;animation:drip 1.6s ease-in infinite}
-  .penguin.is-sad .smile-small{opacity:0}
-  .penguin.is-sad .smile-frown{opacity:1}
-  @keyframes drip{0%{transform:translateY(0);opacity:0}25%{opacity:1}100%{transform:translateY(26px);opacity:0}}
-
-  .penguin.is-happy .eyes{opacity:0}
-  .penguin.is-happy .happy-eyes{opacity:1}
-  .penguin.is-happy .smile-small{opacity:0}
-  .penguin.is-happy .smile-big{opacity:1}
-  .penguin .smile-big{opacity:0}
-  .penguin.is-happy .flipper-l{transform:rotate(38deg);transform-origin:62px 120px}
-  .penguin.is-happy .flipper-r{transform:rotate(-38deg);transform-origin:138px 120px}
-  .penguin.is-happy{animation:dance 0.7s ease-in-out infinite}
+  .penguin{width:100%;height:100%;display:block;transform-origin:50% 92%;animation:dance .7s ease-in-out infinite}
   @keyframes dance{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
 
-  .question{
-    font-family:'Fredoka',sans-serif;
-    font-weight:600;
-    font-size:clamp(1.45rem,5.2vw,2.05rem);
-    line-height:1.25;
-    margin:0;
-    color:var(--text);
-    min-height:2.4em;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-
-  .buttons{display:flex;align-items:center;justify-content:center;gap:16px;width:100%;min-height:66px}
-
-  button{
-    font-family:'Fredoka',sans-serif;
-    font-weight:600;
-    border:none;
-    border-radius:999px;
-    cursor:pointer;
-    color:#fff;
-    font-size:clamp(1.05rem,4vw,1.35rem);
-    padding:14px 30px;
-    transition:transform .28s cubic-bezier(.2,1.4,.4,1),background .2s,box-shadow .2s;
-    touch-action:manipulation;
-  }
-  button:active{filter:brightness(.95)}
-  button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
-
-  .btn-yes{background:var(--yes);box-shadow:0 8px 0 var(--yes-dark)}
-  .btn-yes:active{transform:translateY(4px) scale(var(--yes-scale,1));box-shadow:0 4px 0 var(--yes-dark)}
-  .btn-no{background:var(--no);box-shadow:0 8px 0 var(--no-dark)}
-  .btn-no:active{transform:translateY(4px) scale(var(--no-scale,1));box-shadow:0 4px 0 var(--no-dark)}
-
-  /* celebration */
-  .yay-title{
+  .title{
     font-family:'Fredoka',sans-serif;
     font-weight:700;
-    font-size:clamp(1.8rem,7vw,2.6rem);
+    font-size:clamp(2rem,8vw,3rem);
+    line-height:1;
     margin:0;
     color:var(--yes);
   }
-  .yay-text{font-size:clamp(1rem,4vw,1.2rem);font-weight:700;margin:0;color:var(--text)}
-  .yay-date{
-    margin:4px 0 0;
+  .message{
+    font-size:clamp(1.05rem,4vw,1.25rem);
+    font-weight:800;
+    line-height:1.35;
+    margin:0;
+    color:var(--text);
+  }
+  .date{
+    margin:2px 0 0;
     font-family:'Fredoka',sans-serif;
     font-weight:600;
     color:var(--blue);
@@ -243,24 +114,6 @@
     border-radius:999px;
     box-shadow:0 6px 18px rgba(63,111,214,.18);
   }
-  .cal-buttons{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:4px}
-  .cal-btn{
-    font-family:'Fredoka',sans-serif;
-    font-weight:600;
-    font-size:clamp(.95rem,3.6vw,1.1rem);
-    text-decoration:none;
-    text-align:center;
-    padding:13px 18px;
-    border-radius:16px;
-    border:2px solid var(--blue);
-    color:var(--blue);
-    background:#fff;
-    cursor:pointer;
-    transition:transform .15s,background .15s,color .15s;
-  }
-  .cal-btn:active{transform:translateY(2px)}
-  .cal-google{background:var(--blue);color:#fff}
-  .cal-ics{color:var(--blue)}
 
   .confetti,.firework{position:fixed;z-index:5;pointer-events:none}
   .confetti{top:-14px;width:10px;height:14px;border-radius:2px;animation:confetti-fall linear forwards}
@@ -279,23 +132,20 @@
   .rocket{position:fixed;z-index:5;pointer-events:none;width:4px;height:15px;border-radius:3px;box-shadow:0 0 8px 2px currentColor;transition:top .5s cubic-bezier(.18,.7,.3,1),opacity .5s}
 
   @media (prefers-reduced-motion: reduce){
-    .snow,.penguin,.star,.confetti,.firework,.flash,.rocket,.penguin.is-happy,.loader-dots span,.btn-begin{animation:none!important}
-    button{transition:background .2s}
+    .snow,.star,.penguin,.card,.confetti,.firework,.flash,.rocket{animation:none!important}
   }
 </style>
 </head>
 <body>
-
   <div class="ground"></div>
   <div class="sky-layer" id="sky"></div>
 
-  <!-- ============ THE INTRO / SUSPENSE SCREEN ============ -->
-  <main class="card" id="intro-screen">
+  <main class="card">
     <div class="penguin-wrap">
       <svg class="penguin" viewBox="0 0 200 210" aria-hidden="true">
-        <ellipse class="flipper-l" cx="40"  cy="124" rx="15" ry="32" fill="#1f2a3d" transform="rotate(14 40 124)"/>
-        <ellipse class="flipper-r" cx="160" cy="124" rx="15" ry="32" fill="#1f2a3d" transform="rotate(-14 160 124)"/>
-        <ellipse cx="80"  cy="198" rx="18" ry="10" fill="var(--feet)"/>
+        <ellipse cx="40" cy="124" rx="15" ry="32" fill="#1f2a3d" transform="rotate(38 62 120)"/>
+        <ellipse cx="160" cy="124" rx="15" ry="32" fill="#1f2a3d" transform="rotate(-38 138 120)"/>
+        <ellipse cx="80" cy="198" rx="18" ry="10" fill="var(--feet)"/>
         <ellipse cx="120" cy="198" rx="18" ry="10" fill="var(--feet)"/>
         <g fill="#1f2a3d">
           <path d="M90 34 C89 21 95 19 96 33 Z"/>
@@ -304,359 +154,22 @@
         </g>
         <path d="M100 30 C152 30 170 72 170 116 C170 168 142 198 100 198 C58 198 30 168 30 116 C30 72 48 30 100 30 Z" fill="var(--ink)"/>
         <path d="M100 52 C140 52 156 86 156 126 C156 170 132 194 100 194 C68 194 44 170 44 126 C44 86 60 52 100 52 Z" fill="var(--cream)"/>
-        <ellipse cx="62"  cy="106" rx="11" ry="6.5" fill="var(--cheek)" opacity=".55"/>
+        <ellipse cx="62" cy="106" rx="11" ry="6.5" fill="var(--cheek)" opacity=".55"/>
         <ellipse cx="138" cy="106" rx="11" ry="6.5" fill="var(--cheek)" opacity=".55"/>
-        <g class="eyes">
-          <circle cx="80"  cy="92" r="13" fill="#1f2a3d"/>
-          <circle cx="120" cy="92" r="13" fill="#1f2a3d"/>
-          <circle cx="84"  cy="88" r="4.6" fill="#fff"/>
-          <circle cx="124" cy="88" r="4.6" fill="#fff"/>
-          <circle cx="76"  cy="96" r="2.2" fill="#fff"/>
-          <circle cx="116" cy="96" r="2.2" fill="#fff"/>
-        </g>
-        <path d="M94 102 L106 102 L100 112 Z" fill="var(--beak)"/>
-        <path class="smile-small" d="M91 120 Q100 127 109 120" fill="none" stroke="#1f2a3d" stroke-width="3" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <p class="intro-line" id="introLine">Psst…</p>
-    <div class="loader-dots" id="loaderDots"><span></span><span></span><span></span></div>
-    <button class="btn-begin hidden" id="beginBtn" type="button">Tap to begin 💌</button>
-  </main>
-
-  <!-- ============ THE QUESTION SCREEN ============ -->
-  <main class="card hidden" id="ask-screen">
-    <div class="penguin-wrap">
-      <!-- penguin: mood is controlled by .is-sad / .is-happy classes -->
-      <svg class="penguin" id="penguin" viewBox="0 0 200 210" aria-hidden="true">
-        <!-- stubby flippers (behind body) -->
-        <ellipse class="flipper-l" cx="40"  cy="124" rx="15" ry="32" fill="#1f2a3d" transform="rotate(14 40 124)"/>
-        <ellipse class="flipper-r" cx="160" cy="124" rx="15" ry="32" fill="#1f2a3d" transform="rotate(-14 160 124)"/>
-        <!-- little feet -->
-        <ellipse cx="80"  cy="198" rx="18" ry="10" fill="var(--feet)"/>
-        <ellipse cx="120" cy="198" rx="18" ry="10" fill="var(--feet)"/>
-        <!-- fuzzy head tuft (pokes above the hood) -->
-        <g fill="#1f2a3d">
-          <path d="M90 34 C89 21 95 19 96 33 Z"/>
-          <path d="M99 33 C99 17 105 17 105 33 Z"/>
-          <path d="M108 34 C108 21 114 21 113 33 Z"/>
-        </g>
-        <!-- dark rounded body / hood -->
-        <path d="M100 30 C152 30 170 72 170 116 C170 168 142 198 100 198 C58 198 30 168 30 116 C30 72 48 30 100 30 Z" fill="var(--ink)"/>
-        <!-- white face + belly front -->
-        <path d="M100 52 C140 52 156 86 156 126 C156 170 132 194 100 194 C68 194 44 170 44 126 C44 86 60 52 100 52 Z" fill="var(--cream)"/>
-        <!-- cheeks -->
-        <ellipse cx="62"  cy="106" rx="11" ry="6.5" fill="var(--cheek)" opacity=".55"/>
-        <ellipse cx="138" cy="106" rx="11" ry="6.5" fill="var(--cheek)" opacity=".55"/>
-        <!-- sad brows: inner corners RAISED = worried, not angry -->
-        <g class="brow" stroke="#1f2a3d" stroke-width="4" stroke-linecap="round">
-          <line x1="67" y1="80" x2="90" y2="72"/>
-          <line x1="133" y1="80" x2="110" y2="72"/>
-        </g>
-        <!-- big shiny eyes -->
-        <g class="eyes">
-          <circle cx="80"  cy="92" r="13" fill="#1f2a3d"/>
-          <circle cx="120" cy="92" r="13" fill="#1f2a3d"/>
-          <circle cx="84"  cy="88" r="4.6" fill="#fff"/>
-          <circle cx="124" cy="88" r="4.6" fill="#fff"/>
-          <circle cx="76"  cy="96" r="2.2" fill="#fff"/>
-          <circle cx="116" cy="96" r="2.2" fill="#fff"/>
-        </g>
-        <!-- happy (closed) eyes -->
-        <g class="happy-eyes" fill="none" stroke="#1f2a3d" stroke-width="4.5" stroke-linecap="round">
-          <path d="M70 94 Q80 82 90 94"/>
-          <path d="M110 94 Q120 82 130 94"/>
-        </g>
-        <!-- tear -->
-        <path class="tear" d="M132 99 q5 9 0 13 q-5 -4 0 -13 Z" fill="var(--tear)"/>
-        <!-- tiny beak -->
-        <path d="M94 102 L106 102 L100 112 Z" fill="var(--beak)"/>
-        <!-- mouths -->
-        <path class="smile-small" d="M91 120 Q100 127 109 120" fill="none" stroke="#1f2a3d" stroke-width="3" stroke-linecap="round"/>
-        <path class="smile-frown" d="M91 125 Q100 119 109 125" fill="none" stroke="#1f2a3d" stroke-width="3" stroke-linecap="round"/>
-        <path class="smile-big" d="M88 118 Q100 134 112 118 Q100 123 88 118 Z" fill="#ff7a85" stroke="#1f2a3d" stroke-width="2.5" stroke-linejoin="round"/>
-      </svg>
-    </div>
-
-    <p class="question" id="question"></p>
-
-    <div class="buttons">
-      <button class="btn-yes" id="yesBtn" type="button">Yes!</button>
-      <button class="btn-no"  id="noBtn"  type="button">No</button>
-    </div>
-  </main>
-
-  <!-- ============ THE CELEBRATION SCREEN ============ -->
-  <main class="card hidden" id="yay-screen">
-    <div class="penguin-wrap">
-      <svg class="penguin is-happy" viewBox="0 0 200 210" aria-hidden="true">
-        <ellipse class="flipper-l" cx="40"  cy="124" rx="15" ry="32" fill="#1f2a3d" transform="rotate(14 40 124)"/>
-        <ellipse class="flipper-r" cx="160" cy="124" rx="15" ry="32" fill="#1f2a3d" transform="rotate(-14 160 124)"/>
-        <ellipse cx="80"  cy="198" rx="18" ry="10" fill="var(--feet)"/>
-        <ellipse cx="120" cy="198" rx="18" ry="10" fill="var(--feet)"/>
-        <g fill="#1f2a3d">
-          <path d="M90 34 C89 21 95 19 96 33 Z"/>
-          <path d="M99 33 C99 17 105 17 105 33 Z"/>
-          <path d="M108 34 C108 21 114 21 113 33 Z"/>
-        </g>
-        <path d="M100 30 C152 30 170 72 170 116 C170 168 142 198 100 198 C58 198 30 168 30 116 C30 72 48 30 100 30 Z" fill="var(--ink)"/>
-        <path d="M100 52 C140 52 156 86 156 126 C156 170 132 194 100 194 C68 194 44 170 44 126 C44 86 60 52 100 52 Z" fill="var(--cream)"/>
-        <ellipse cx="62"  cy="106" rx="11" ry="6.5" fill="var(--cheek)" opacity=".55"/>
-        <ellipse cx="138" cy="106" rx="11" ry="6.5" fill="var(--cheek)" opacity=".55"/>
-        <g class="happy-eyes" fill="none" stroke="#1f2a3d" stroke-width="4.5" stroke-linecap="round" style="opacity:1">
+        <g fill="none" stroke="#1f2a3d" stroke-width="4.5" stroke-linecap="round">
           <path d="M70 94 Q80 82 90 94"/>
           <path d="M110 94 Q120 82 130 94"/>
         </g>
         <path d="M94 102 L106 102 L100 112 Z" fill="var(--beak)"/>
-        <path class="smile-big" d="M88 118 Q100 134 112 118 Q100 123 88 118 Z" fill="#ff7a85" stroke="#1f2a3d" stroke-width="2.5" stroke-linejoin="round" style="opacity:1"/>
+        <path d="M88 118 Q100 134 112 118 Q100 123 88 118 Z" fill="#ff7a85" stroke="#1f2a3d" stroke-width="2.5" stroke-linejoin="round"/>
       </svg>
     </div>
-    <h1 class="yay-title">Yay!! 🎉</h1>
-    <p class="yay-text" id="yayText"></p>
-    <p class="yay-date" id="yayDate"></p>
-    <div class="cal-buttons">
-      <a class="cal-btn cal-google" id="gcalBtn" target="_blank" rel="noopener">📅 Add to Google Calendar</a>
-      <button class="cal-btn cal-ics" id="icsBtn" type="button">🍎 Apple / Outlook (.ics)</button>
-    </div>
+    <h1 class="title">You clicked Yes!</h1>
+    <p class="message">It&apos;s a date. You just made two cuties very happy.</p>
+    <p class="date">July 4th weekend, with me</p>
   </main>
 
 <script>
-  /* =========================================================
-     EDIT ME  ->  Put your real questions here, in order.
-     The FIRST one shows first. Each "No" reveals the NEXT one.
-     After the last, it loops back to the first.
-     ========================================================= */
-  const questions = [
-    "Will the prettiest, sweetest, cutest, gorgeous princess spend the 4th of July weekend with me?",
-    "Are you suuure? I already started planning 🥺",
-    "What if I told you I have booked the tickets?",
-    "I have heard ATL is the place to be for July 4th when you are in it!",
-    "This time there will be Hani's pastry and other surprises!",
-    "I really want to help you pack!",
-    "I am prepared to sleep on the couch..",
-    "Pretty please, with a cherry on top?"
-  ];
-
-  /* The "No" button gets more desperate each tap. Edit freely. */
-  const noLabels = ["No", "Are you sure?", "Really?", "Hmm?", "Please?", "🥺"];
-
-  /* Celebration copy. Edit the date line to your plan. */
-  const yayMessage = "It's a date. You just made two cuties very happy.";
-  const yayDate    = "📍 July 4th weekend, with me 💕";
-
-  /* OPTIONAL: get a heads-up email when she says Yes.
-     1. Go to web3forms.com, enter your email, copy the access key it sends you.
-     2. Paste it between the quotes below.
-     Leave it as-is to skip notifications entirely. */
-  const WEB3FORMS_KEY = "4b4ff377-0eba-4404-9967-5860fe390eb2";
-
-  /* OPTIONAL: the teaser lines shown on the intro before the first question.
-     They fade in one at a time, then the "Tap to begin" button appears. */
-  const introLines = [
-    "Psst…",
-    "Someone has a question for you",
-    "A pretty important one 🥺"
-  ];
-
-  /* EDIT ME -> the event her calendar buttons will add.
-     Dates are YYYYMMDD. For an all-day span, "end" is the day AFTER the last
-     day (it is exclusive), so Jul 3 -> Jul 6 covers Fri Jul 3 through Sun Jul 5.
-     To make it a timed event instead, set allDay:false and use
-     start:"20260703T180000", end:"20260703T220000" (her local time). */
-  const EVENT = {
-    title:    "July 4th weekend together 🐧",
-    location: "",                       // optional, e.g. "My place"
-    details:  "Can't wait to spend it with you 💕",
-    start:    "20260704",
-    end:      "20260706",
-    allDay:   true
-  };
-
-  /* ============ logic (you usually don't need to touch this) ============ */
-  const qEl   = document.getElementById('question');
-  const yesEl = document.getElementById('yesBtn');
-  const noEl  = document.getElementById('noBtn');
-  const peng  = document.getElementById('penguin');
-  const ask   = document.getElementById('ask-screen');
-  const yay   = document.getElementById('yay-screen');
-
-  let idx = 0;     // which question
-  let nos = 0;     // how many times No was tapped
-
-  function render(){
-    qEl.textContent = questions[idx];
-    noEl.textContent = noLabels[Math.min(nos, noLabels.length - 1)];
-
-    // grow Yes, shrink No
-    const yesScale = Math.min(1 + nos * 0.14, 1.7);
-    const noScale  = Math.max(1 - nos * 0.12, 0.55);
-    yesEl.style.transform = 'scale(' + yesScale + ')';
-    yesEl.style.setProperty('--yes-scale', yesScale);
-    noEl.style.transform  = 'scale(' + noScale + ')';
-    noEl.style.setProperty('--no-scale', noScale);
-
-    // mood
-    peng.classList.toggle('is-sad', nos >= 2);
-  }
-
-  noEl.addEventListener('click', () => {
-    nos++;
-    idx = (idx + 1) % questions.length;  // loop the questions
-    render();
-  });
-
-  yesEl.addEventListener('click', celebrate);
-
-  /* ---------- intro suspense ---------- */
-  const introScreen = document.getElementById('intro-screen');
-  const introLine   = document.getElementById('introLine');
-  const loaderDots  = document.getElementById('loaderDots');
-  const beginBtn    = document.getElementById('beginBtn');
-
-  (function runIntro(){
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce){
-      // skip the build-up, show the last line and the button right away
-      introLine.textContent = introLines[introLines.length - 1];
-      loaderDots.classList.add('hidden');
-      beginBtn.classList.remove('hidden');
-      return;
-    }
-
-    function afterTransition(el, fallbackMs, done){
-      let settled = false;
-      const finish = () => {
-        if (settled) return;
-        settled = true;
-        el.removeEventListener('transitionend', finish);
-        done();
-      };
-      el.addEventListener('transitionend', finish, { once:true });
-      setTimeout(finish, fallbackMs);
-    }
-
-    function swapIntroLine(nextText, done){
-      introLine.classList.add('is-changing');
-      afterTransition(introLine, 520, () => {
-        introLine.textContent = nextText;
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            introLine.classList.remove('is-changing');
-            afterTransition(introLine, 520, done);
-          });
-        });
-      });
-    }
-
-    function showBeginButton(){
-      loaderDots.classList.add('is-hiding');
-      afterTransition(loaderDots, 420, () => {
-        loaderDots.classList.add('hidden');
-        requestAnimationFrame(() => beginBtn.classList.remove('hidden'));
-      });
-    }
-
-    let i = 0;
-    introLine.textContent = introLines[0];
-    function queueNextLine(){
-      setTimeout(() => {
-      i++;
-      if (i < introLines.length){
-        swapIntroLine(introLines[i], queueNextLine);
-      } else {
-        showBeginButton();
-      }
-      }, 1150);
-    }
-    queueNextLine();
-  })();
-
-  beginBtn.addEventListener('click', () => {
-    introScreen.classList.add('is-leaving');
-    ask.classList.remove('hidden');
-    ask.classList.add('is-entering');
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => ask.classList.remove('is-entering'));
-    });
-    setTimeout(() => {
-      introScreen.classList.add('hidden');
-      introScreen.classList.remove('is-leaving');
-    }, 460);
-  });
-
-  function celebrate(){
-    // Show the happy screen FIRST, so a slow or failed network never ruins the moment.
-    document.getElementById('yayText').textContent = yayMessage;
-    document.getElementById('yayDate').textContent = yayDate;
-    ask.classList.add('hidden');
-    yay.classList.remove('hidden');
-    burstConfetti();
-    fireworksShow();
-    notifyYes();
-    setupCalendar();
-  }
-
-  function setupCalendar(){
-    // Google Calendar: opens a pre-filled event she just saves.
-    const g = new URLSearchParams({
-      action: "TEMPLATE",
-      text: EVENT.title,
-      dates: EVENT.start + "/" + EVENT.end,
-      details: EVENT.details,
-      location: EVENT.location
-    });
-    document.getElementById('gcalBtn').href =
-      "https://calendar.google.com/calendar/render?" + g.toString();
-
-    // .ics file for Apple Calendar / Outlook.
-    document.getElementById('icsBtn').addEventListener('click', downloadIcs);
-  }
-
-  function downloadIcs(){
-    const esc = (s) => String(s)
-      .replace(/\\/g, "\\\\").replace(/;/g, "\\;")
-      .replace(/,/g, "\\,").replace(/\n/g, "\\n");
-    const dt = EVENT.allDay
-      ? "DTSTART;VALUE=DATE:" + EVENT.start + "\r\nDTEND;VALUE=DATE:" + EVENT.end
-      : "DTSTART:" + EVENT.start + "\r\nDTEND:" + EVENT.end;
-    const stamp = new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-    const ics = [
-      "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Penguin Invite//EN",
-      "BEGIN:VEVENT",
-      "UID:" + stamp + "@penguin-invite",
-      "DTSTAMP:" + stamp,
-      dt,
-      "SUMMARY:" + esc(EVENT.title),
-      "DESCRIPTION:" + esc(EVENT.details),
-      "LOCATION:" + esc(EVENT.location),
-      "END:VEVENT","END:VCALENDAR"
-    ].join("\r\n");
-    const blob = new Blob([ics], { type: "text/calendar" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "our-weekend.ics";
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
-
-  function notifyYes(){
-    if (!WEB3FORMS_KEY || WEB3FORMS_KEY.startsWith("PASTE")) return; // not set up, skip
-    fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({
-        access_key: WEB3FORMS_KEY,
-        subject: "She said YES 🎉",
-        from_name: "Penguin Invite",
-        message:
-          "She said YES!\n\n" +
-          "On the question: " + questions[idx] + "\n" +
-          "Times she tapped No first: " + nos + "\n" +
-          "When: " + new Date().toLocaleString()
-      })
-    }).catch(function(){ /* offline or blocked: the celebration already happened, so ignore */ });
-  }
-
-  /* ---------- ambient snow + stars ---------- */
   (function buildSky(){
     const sky = document.getElementById('sky');
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -684,12 +197,11 @@
     }
   })();
 
-  /* ---------- celebration effects (red / white / blue + pink) ---------- */
   const PARTY = ['#ff5a6e', '#ffffff', '#3f6fd6', '#ff9fb0', '#ffd23f'];
 
   function burstConfetti(){
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    for (let i = 0; i < 110; i++){
+    for (let i = 0; i < 120; i++){
       const c = document.createElement('div');
       c.className = 'confetti';
       c.style.left = Math.random() * 100 + 'vw';
@@ -704,7 +216,7 @@
 
   function fireworksShow(){
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const colors = ['#ff5a6e', '#ffffff', '#3f6fd6']; // red / white / blue
+    const colors = ['#ff5a6e', '#ffffff', '#3f6fd6'];
     let t = 0;
     for (let b = 0; b < 11; b++){
       setTimeout(() => {
@@ -717,7 +229,6 @@
   }
 
   function launchFirework(cx, cy, color){
-    // a rocket streaks up from the bottom, then bursts at (cx, cy)
     const rocket = document.createElement('div');
     rocket.className = 'rocket';
     rocket.style.left = cx + 'vw';
@@ -747,18 +258,19 @@
       f.style.left = cx + 'vw';
       f.style.top = cy + 'vh';
       f.style.background = color;
-      f.style.color = color;                 // drives the glow (box-shadow currentColor)
+      f.style.color = color;
       const ang = (i / n) * Math.PI * 2 + Math.random() * 0.12;
       const dist = 80 + Math.random() * 80;
       f.style.setProperty('--dx', Math.cos(ang) * dist + 'px');
-      f.style.setProperty('--dy', (Math.sin(ang) * dist + 45) + 'px'); // +gravity, so they fall
+      f.style.setProperty('--dy', (Math.sin(ang) * dist + 45) + 'px');
       f.style.animationDelay = (Math.random() * 0.06) + 's';
       document.body.appendChild(f);
       setTimeout(() => f.remove(), 1400);
     }
   }
 
-  render();
+  burstConfetti();
+  fireworksShow();
 </script>
 </body>
 </html>
